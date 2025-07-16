@@ -23,6 +23,7 @@ public class AtualizarPrecipitacaoUseCase implements AtualizarAlagamentoInputPor
         log.logInfo("Iniciando processo de atualização da precipitacao acumulada e teempo de chuva para os registros a partir do Id {}", idControle);
 
         List<Alagamento> alagamentosList =  alagamentosOutputPort.buscarRegostrosPorIdControle(idControle, limite);
-        alagamentosList.forEach(alagamento -> log.logInfo("Alagamento: {}", alagamento.toString()));
+
+
     }
 }

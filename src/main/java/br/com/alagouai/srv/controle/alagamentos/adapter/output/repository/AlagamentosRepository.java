@@ -10,11 +10,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AlagamentosRepository extends JpaRepository<AlagamentoEntity, Integer> {
+public interface AlagamentosRepository extends JpaRepository<AlagamentoEntity, Long> {
 
    // List<AlagamentoEntity> findByIdBetween(Integer idControle, Integer limite);
 
-    @Query("SELECT r FROM alagamento r WHERE r.id BETWEEN :inicio AND :fim")
-    List<AlagamentoEntity> findByIdBetween(@Param("inicio") Integer inicio, @Param("fim") Integer fim);
+    @Query("SELECT r FROM AlagamentoEntity r WHERE r.id BETWEEN :inicio AND :fim")
+    List<AlagamentoEntity> findByIdBetween(@Param("inicio") Long inicio, @Param("fim") Long fim);
+
 
 }

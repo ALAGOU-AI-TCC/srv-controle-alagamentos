@@ -28,7 +28,7 @@ public class AlagamentosAdapter implements AlagamentosOutputPort {
         log.info("Iniciando consultas do Id {}, até {}", idControle, idFim);
         try {
             return alagamentosRepository
-                    .findByIdBetween(idControle, idFim)
+                    .findByIdBetween(Long.valueOf(idControle), Long.valueOf(idFim))
                     .stream()
                     .map(alagamentoMapper::toAlagamento)
                     .toList();
