@@ -2,12 +2,13 @@ package br.com.alagouai.srv.controle.alagamentos.core.domain.model;
 
 public class Alagamento {
 
+        private Long id;
         private Double temperatura;
         private Integer umidade;
         private Integer pressao;
         private Double velocidadeVento;
         private Double precipitacaoChuva;
-        private String tempoChuva;
+        private Integer tempoChuva;
         private String intensidadeChuva;
         private Double pontoOrvalho;
         private Double latitude;
@@ -21,8 +22,8 @@ public class Alagamento {
 
     public Alagamento() {
     }
-
-    public Alagamento(Double temperatura, Integer umidade, Integer pressao, Double velocidadeVento, Double precipitacaoChuva, String tempoChuva, String intensidadeChuva, Double pontoOrvalho, Double latitude, Double longitude, String dataHora, Integer historicoAlagamento, String solo, String bairro, Double precipitacaoDiaria, Double precipitacaoAcumulada) {
+    public Alagamento(Long id, Double temperatura, Integer umidade, Integer pressao, Double velocidadeVento, Double precipitacaoChuva, Integer tempoChuva, String intensidadeChuva, Double pontoOrvalho, Double latitude, Double longitude, String dataHora, Integer historicoAlagamento, String solo, String bairro, Double precipitacaoDiaria, Double precipitacaoAcumulada) {
+        this.id = id;
         this.temperatura = temperatura;
         this.umidade = umidade;
         this.pressao = pressao;
@@ -39,6 +40,14 @@ public class Alagamento {
         this.bairro = bairro;
         this.precipitacaoDiaria = precipitacaoDiaria;
         this.precipitacaoAcumulada = precipitacaoAcumulada;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Double getTemperatura() {
@@ -49,108 +58,12 @@ public class Alagamento {
         this.temperatura = temperatura;
     }
 
-    public Double getPrecipitacaoAcumulada() {
-        return precipitacaoAcumulada;
+    public Integer getUmidade() {
+        return umidade;
     }
 
-    public void setPrecipitacaoAcumulada(Double precipitacaoAcumulada) {
-        this.precipitacaoAcumulada = precipitacaoAcumulada;
-    }
-
-    public Double getPrecipitacaoDiaria() {
-        return precipitacaoDiaria;
-    }
-
-    public void setPrecipitacaoDiaria(Double precipitacaoDiaria) {
-        this.precipitacaoDiaria = precipitacaoDiaria;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getSolo() {
-        return solo;
-    }
-
-    public void setSolo(String solo) {
-        this.solo = solo;
-    }
-
-    public Integer getHistoricoAlagamento() {
-        return historicoAlagamento;
-    }
-
-    public void setHistoricoAlagamento(Integer historicoAlagamento) {
-        this.historicoAlagamento = historicoAlagamento;
-    }
-
-    public String getDataHora() {
-        return dataHora;
-    }
-
-    public void setDataHora(String dataHora) {
-        this.dataHora = dataHora;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getPontoOrvalho() {
-        return pontoOrvalho;
-    }
-
-    public void setPontoOrvalho(Double pontoOrvalho) {
-        this.pontoOrvalho = pontoOrvalho;
-    }
-
-    public String getIntensidadeChuva() {
-        return intensidadeChuva;
-    }
-
-    public void setIntensidadeChuva(String intensidadeChuva) {
-        this.intensidadeChuva = intensidadeChuva;
-    }
-
-    public String getTempoChuva() {
-        return tempoChuva;
-    }
-
-    public void setTempoChuva(String tempoChuva) {
-        this.tempoChuva = tempoChuva;
-    }
-
-    public Double getPrecipitacaoChuva() {
-        return precipitacaoChuva;
-    }
-
-    public void setPrecipitacaoChuva(Double precipitacaoChuva) {
-        this.precipitacaoChuva = precipitacaoChuva;
-    }
-
-    public Double getVelocidadeVento() {
-        return velocidadeVento;
-    }
-
-    public void setVelocidadeVento(Double velocidadeVento) {
-        this.velocidadeVento = velocidadeVento;
+    public void setUmidade(Integer umidade) {
+        this.umidade = umidade;
     }
 
     public Integer getPressao() {
@@ -161,12 +74,108 @@ public class Alagamento {
         this.pressao = pressao;
     }
 
-    public Integer getUmidade() {
-        return umidade;
+    public Double getVelocidadeVento() {
+        return velocidadeVento;
     }
 
-    public void setUmidade(Integer umidade) {
-        this.umidade = umidade;
+    public void setVelocidadeVento(Double velocidadeVento) {
+        this.velocidadeVento = velocidadeVento;
+    }
+
+    public Double getPrecipitacaoChuva() {
+        return precipitacaoChuva;
+    }
+
+    public void setPrecipitacaoChuva(Double precipitacaoChuva) {
+        this.precipitacaoChuva = precipitacaoChuva;
+    }
+
+    public Integer getTempoChuva() {
+        return tempoChuva;
+    }
+
+    public void setTempoChuva(Integer tempoChuva) {
+        this.tempoChuva = tempoChuva;
+    }
+
+    public String getIntensidadeChuva() {
+        return intensidadeChuva;
+    }
+
+    public void setIntensidadeChuva(String intensidadeChuva) {
+        this.intensidadeChuva = intensidadeChuva;
+    }
+
+    public Double getPontoOrvalho() {
+        return pontoOrvalho;
+    }
+
+    public void setPontoOrvalho(Double pontoOrvalho) {
+        this.pontoOrvalho = pontoOrvalho;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getDataHora() {
+        return dataHora;
+    }
+
+    public void setDataHora(String dataHora) {
+        this.dataHora = dataHora;
+    }
+
+    public Integer getHistoricoAlagamento() {
+        return historicoAlagamento;
+    }
+
+    public void setHistoricoAlagamento(Integer historicoAlagamento) {
+        this.historicoAlagamento = historicoAlagamento;
+    }
+
+    public String getSolo() {
+        return solo;
+    }
+
+    public void setSolo(String solo) {
+        this.solo = solo;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+
+    public Double getPrecipitacaoDiaria() {
+        return precipitacaoDiaria;
+    }
+
+    public void setPrecipitacaoDiaria(Double precipitacaoDiaria) {
+        this.precipitacaoDiaria = precipitacaoDiaria;
+    }
+
+    public Double getPrecipitacaoAcumulada() {
+        return precipitacaoAcumulada;
+    }
+
+    public void setPrecipitacaoAcumulada(Double precipitacaoAcumulada) {
+        this.precipitacaoAcumulada = precipitacaoAcumulada;
     }
 
     @Override

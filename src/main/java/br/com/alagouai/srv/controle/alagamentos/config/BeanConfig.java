@@ -4,6 +4,7 @@ import br.com.alagouai.srv.controle.alagamentos.core.usecase.AtualizarPrecipitac
 import br.com.alagouai.srv.controle.alagamentos.port.input.AtualizarAlagamentoInputPort;
 import br.com.alagouai.srv.controle.alagamentos.port.output.AlagamentosOutputPort;
 import br.com.alagouai.srv.controle.alagamentos.port.output.LogControlOutputPort;
+import br.com.alagouai.srv.controle.alagamentos.port.output.OpenWeatherOutputPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfig {
 
     @Bean
-    public AtualizarAlagamentoInputPort atualizarAlagamentoInputPort(AlagamentosOutputPort alagamentosOutputPort, LogControlOutputPort logControlOutputPort) {
-        return new AtualizarPrecipitacaoUseCase(logControlOutputPort,alagamentosOutputPort);
+    public AtualizarAlagamentoInputPort atualizarAlagamentoInputPort(AlagamentosOutputPort alagamentosOutputPort, LogControlOutputPort logControlOutputPort, OpenWeatherOutputPort openWeatherOutputPort) {
+        return new AtualizarPrecipitacaoUseCase(logControlOutputPort,alagamentosOutputPort, openWeatherOutputPort);
     }
 }

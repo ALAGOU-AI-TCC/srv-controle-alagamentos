@@ -7,4 +7,6 @@ import java.util.List;
 public interface AlagamentosOutputPort {
 
     List<Alagamento> buscarRegostrosPorIdControle(Integer idControle, Integer limite);
+
+    void atualizarRegistros(List<Alagamento> alagamentosListAtualizados);
 }

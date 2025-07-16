@@ -17,22 +17,54 @@ public class AlagamentoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "temperatura")
     private Double temperatura;
+
+    @Column(name = "umidade")
     private Integer umidade;
+
+    @Column(name = "pressao")
     private Integer pressao;
+
+    @Column(name = "velocidade_vento")
     private Double velocidadeVento;
+
+    @Column(name = "precipitacao_chuva")
     private Double precipitacaoChuva;
-    private String tempoChuva;
+
+    @Column(name = "tempo_chuva")
+    private Integer tempoChuva;
+
+    @Column(name = "intensidade_chuva")
     private String intensidadeChuva;
+
+    @Column(name = "ponto_orvalho")
     private Double pontoOrvalho;
+
+    @Column(name = "latitude")
     private Double latitude;
+
+    @Column(name = "longitude")
     private Double longitude;
+
+    @Column(name = "data_hora")
     private String dataHora;
+
+    @Column(name = "historico_alagamento")
     private Integer historicoAlagamento;
+
+    @Column(name = "solo")
     private String solo;
+
+    @Column(name = "bairro")
     private String bairro;
+
+    @Column(name = "precipitacao_diaria")
     private Double precipitacaoDiaria;
+
+    @Column(name = "precipitacao_acumulada")
     private Double precipitacaoAcumulada;
+
 
     public Long getId() {
         return id;
@@ -82,11 +114,11 @@ public class AlagamentoEntity {
         this.precipitacaoChuva = precipitacaoChuva;
     }
 
-    public String getTempoChuva() {
+    public Integer getTempoChuva() {
         return tempoChuva;
     }
 
-    public void setTempoChuva(String tempoChuva) {
+    public void setTempoChuva(Integer tempoChuva) {
         this.tempoChuva = tempoChuva;
     }
 
