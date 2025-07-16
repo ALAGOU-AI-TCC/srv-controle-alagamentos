@@ -36,48 +36,31 @@ public class AtualizarPrecipitacaoUseCase implements AtualizarAlagamentoInputPor
         alagamentosOutputPort.atualizarRegistros(alagamentosListAtualizados);
     }
 
-
-//    private List<Alagamento> buscarRegistrosHorasAnteriores(List<Alagamento> alagamentosList) {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        for (Alagamento alagamento : alagamentosList) {
-//            LocalDateTime dataHora = LocalDateTime.parse(alagamento.getDataHora(), formatter);
-//            for (int i = 1; i <= 3; i++) {
-//                long timestamp = dataHora.minusHours(i)
-//                        .atZone(ZoneId.of(TIMEZONE_SAO_PAULO))
-//                        .toEpochSecond();
-//                Alagamento alagamentoAtualizado = openWeatherOutputPort.buscarDadosClimaticosDataAlterada(alagamento, timestamp);
-//                if(alagamentoAtualizado.getPrecipitacaoChuva() != 0){
-//                    alagamento.setPrecipitacaoAcumulada(alagamentoAtualizado.getPrecipitacaoChuva() + alagamento.getPrecipitacaoAcumulada());
-//                    alagamento.setTempoChuva(i + 1);
-//                }
-//            }
-//        }
-//        return alagamentosList;
-//    }
-
     private List<Alagamento> buscarRegistrosHorasAnteriores(List<Alagamento> alagamentos) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         ZoneId zonaBrasil = ZoneId.of(TIMEZONE_SAO_PAULO);
 
         for (Alagamento alagamento : alagamentos) {
-            alagamento.setTempoChuva(0);
-            LocalDateTime dataHoraOriginal = LocalDateTime.parse(alagamento.getDataHora(), formatter);
-            double acumulado = alagamento.getPrecipitacaoAcumulada() != null ? alagamento.getPrecipitacaoAcumulada() : 0.0;
-            for (int horaAnterior = 1; horaAnterior <= 3; horaAnterior++) {
-                long timestamp = dataHoraOriginal
-                        .minusHours(horaAnterior)
-                        .atZone(zonaBrasil)
-                        .toEpochSecond();
+            if (alagamento.getPrecipitacaoAcumulada() == null || alagamento.getPrecipitacaoAcumulada() == 0.0) {
+                alagamento.setTempoChuva(0);
+                LocalDateTime dataHoraOriginal = LocalDateTime.parse(alagamento.getDataHora(), formatter);
+                double acumulado = alagamento.getPrecipitacaoChuva() != null ? alagamento.getPrecipitacaoChuva() : 0.0;                for (int horaAnterior = 1; horaAnterior <= 3; horaAnterior++) {
+                    long timestamp = dataHoraOriginal
+                            .minusHours(horaAnterior)
+                            .atZone(zonaBrasil)
+                            .toEpochSecond();
 
-                Alagamento climaAnterior = openWeatherOutputPort.buscarDadosClimaticosDataAlterada(alagamento, timestamp);
-                if (climaAnterior != null && climaAnterior.getPrecipitacaoChuva() != null && climaAnterior.getPrecipitacaoChuva() > 0) {
-                    acumulado += climaAnterior.getPrecipitacaoChuva();
-                    alagamento.setTempoChuva(horaAnterior + 1);
+                    Alagamento climaAnterior = openWeatherOutputPort.buscarDadosClimaticosDataAlterada(alagamento, timestamp);
+                    if (climaAnterior != null && climaAnterior.getPrecipitacaoChuva() != null && climaAnterior.getPrecipitacaoChuva() > 0) {
+                        acumulado += climaAnterior.getPrecipitacaoChuva();
+                        alagamento.setTempoChuva(horaAnterior + 1);
+                    }
                 }
-            }
 
-            alagamento.setPrecipitacaoAcumulada(acumulado);
+                alagamento.setPrecipitacaoAcumulada(acumulado);
+            }
         }
+
         return alagamentos;
     }
 
