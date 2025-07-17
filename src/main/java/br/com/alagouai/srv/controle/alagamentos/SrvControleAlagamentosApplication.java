@@ -1,8 +1,10 @@
-package br.com.alagouai.srv_controle_alagamentos;
+package br.com.alagouai.srv.controle.alagamentos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
+@EnableFeignClients
 @SpringBootApplication
 public class SrvControleAlagamentosApplication {
 
