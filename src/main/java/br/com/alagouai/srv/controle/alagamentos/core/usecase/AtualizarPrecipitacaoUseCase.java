@@ -43,7 +43,12 @@ public class AtualizarPrecipitacaoUseCase implements AtualizarAlagamentoInputPor
         for (Alagamento alagamento : alagamentos) {
             if (alagamento.getPrecipitacaoAcumulada() == null || alagamento.getPrecipitacaoAcumulada() == 0.0) {
                 alagamento.setTempoChuva(0);
-                LocalDateTime dataHoraOriginal = LocalDateTime.parse(alagamento.getDataHora(), formatter);
+                String dataHora = alagamento.getDataHora();
+                if (dataHora != null && dataHora.length() == 16) {
+                    dataHora += ":00";
+                }
+                assert dataHora != null;
+                LocalDateTime dataHoraOriginal = LocalDateTime.parse(dataHora, formatter);
                 double acumulado = alagamento.getPrecipitacaoChuva() != null ? alagamento.getPrecipitacaoChuva() : 0.0;                for (int horaAnterior = 1; horaAnterior <= 3; horaAnterior++) {
                     long timestamp = dataHoraOriginal
                             .minusHours(horaAnterior)
