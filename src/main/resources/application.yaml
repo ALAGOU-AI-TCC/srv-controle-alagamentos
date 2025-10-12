@@ -33,3 +33,8 @@ openweathermap:
   key: chave
   lang: pt_br
   units: metric
+
+
+predictionapi:
+  url: http://localhost:8000
+  path-predict: /predict
