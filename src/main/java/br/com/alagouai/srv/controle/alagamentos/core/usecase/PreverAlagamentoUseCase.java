@@ -37,8 +37,16 @@ public class PreverAlagamentoUseCase implements PreverAlagamentoInputPort {
                 alagamentoAtual
         );
 
+        int tempoChuva4h = calcularTempoChuvaAcumulado4h(
+                previsao.getLatitude(),
+                previsao.getLongitude(),
+                tsAtual,
+                alagamentoAtual
+        );
+
         if (alagamentoAtual != null) {
             alagamentoAtual.setPrecipitacaoAcumulada(precipAcum4h);
+            alagamentoAtual.setTempoChuva(tempoChuva4h);
         }
 
         Previsao resposta = predictionApiOutputPort.prever(alagamentoAtual);
@@ -62,11 +70,53 @@ public class PreverAlagamentoUseCase implements PreverAlagamentoInputPort {
         return Math.max(0.0, total);
     }
 
+    /**
+     * Soma horas de chuva nas 4 últimas horas (t, t-1, t-2, t-3).
+     * Regra: para cada hora, se choveu => +1; senão => +0.
+     * Fonte primária: a.getTempoChuva() (0 ou 1). Se vier null, infere por precipitação (>0 mm => 1, senão 0).
+     */
+    private int calcularTempoChuvaAcumulado4h(String latitude,
+                                              String longitude,
+                                              String tsReferenciaSegundos,
+                                              Alagamento alagamentoAtual) {
+        int totalHoras = 0;
+
+        // t
+        totalHoras += choveuNestaHora(alagamentoAtual);
+
+        // t-1, t-2, t-3
+        for (int h = 1; h <= 3; h++) {
+            String ts = subtrairHorasUnix(tsReferenciaSegundos, h);
+            Alagamento a = openWeatherOutputPort.buscarDadosClimaticos(latitude, longitude, ts);
+            totalHoras += choveuNestaHora(a);
+        }
+
+        // clamp 0..4
+        if (totalHoras < 0) totalHoras = 0;
+        if (totalHoras > 4) totalHoras = 4;
+
+        return totalHoras;
+    }
+
+    /** Retorna 1 se choveu naquela hora, senão 0. Usa tempoChuva (0/1); se null, infere por precipitação. */
+    private int choveuNestaHora(Alagamento a) {
+        if (a == null) return 0;
+
+        Integer t = a.getTempoChuva(); // esperado: 0 ou 1 por hora
+        if (t != null) {
+            return (t > 0) ? 1 : 0;
+        }
+
+        // fallback: precipitação > 0 mm implica chuva na hora
+        double mm = safeChuva(a);
+        return (mm > 0.0) ? 1 : 0;
+    }
+
+    /** Extrai precipitação de forma resiliente. */
     private double safeChuva(Alagamento a) {
         if (a == null) return 0.0;
-        Double mm = a.getPrecipitacaoChuva();
-        if (mm == null) return 0.0;
-        if (Double.isNaN(mm) || Double.isInfinite(mm)) return 0.0;
+        Double mm = a.getPrecipitacaoChuva(); // ajuste se o getter tiver outro nome
+        if (mm == null || Double.isNaN(mm) || Double.isInfinite(mm)) return 0.0;
         return Math.max(0.0, mm);
     }
 }
