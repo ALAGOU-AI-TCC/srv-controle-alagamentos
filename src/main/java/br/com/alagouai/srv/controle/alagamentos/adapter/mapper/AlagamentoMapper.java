@@ -24,7 +24,7 @@ public interface AlagamentoMapper {
     AlagamentoEntity toEntity(Alagamento alagamento);
 
 
-        @Mapping(target = "temperatura", ignore = true)
+        @Mapping(target = "temperatura", source = "temperatura")
         @Mapping(target = "umidade", source = "umidade")
         @Mapping(target = "pressao", source = "pressao")
         @Mapping(target = "velocidadeVento", source = "velocidadeVento")

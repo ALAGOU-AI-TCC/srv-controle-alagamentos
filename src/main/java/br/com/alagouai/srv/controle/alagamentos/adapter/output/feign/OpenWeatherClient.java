@@ -12,9 +12,9 @@ public interface OpenWeatherClient {
 
     @GetMapping("/data/3.0/onecall/timemachine")
     OpenWeatherResponse getWeatherData(
-            @RequestParam("lat") double lat,
-            @RequestParam("lon") double lon,
-            @RequestParam("dt") long dt,
+            @RequestParam("lat") String lat,
+            @RequestParam("lon") String lon,
+            @RequestParam("dt") String dt,
             @RequestParam("appid") @Value("${openweathermap.key}") String appId,
             @RequestParam("units") @Value("${openweathermap.units}") String units,
             @RequestParam("lang") @Value("${openweathermap.lang}") String lang

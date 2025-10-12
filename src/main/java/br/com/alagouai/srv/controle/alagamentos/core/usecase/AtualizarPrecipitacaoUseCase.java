@@ -10,7 +10,7 @@ import br.com.alagouai.srv.controle.alagamentos.port.output.OpenWeatherOutputPor
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import static br.com.alagouai.srv.controle.alagamentos.core.common.constant.Constants.TIMEZONE_SAO_PAULO;
@@ -37,26 +37,39 @@ public class AtualizarPrecipitacaoUseCase implements AtualizarAlagamentoInputPor
     }
 
     private List<Alagamento> buscarRegistrosHorasAnteriores(List<Alagamento> alagamentos) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("MM/dd/yy HH:mm:ss");
+
+
         ZoneId zonaBrasil = ZoneId.of(TIMEZONE_SAO_PAULO);
 
         for (Alagamento alagamento : alagamentos) {
             if (alagamento.getPrecipitacaoAcumulada() == null || alagamento.getPrecipitacaoAcumulada() == 0.0) {
                 alagamento.setTempoChuva(0);
-                LocalDateTime dataHoraOriginal = LocalDateTime.parse(alagamento.getDataHora(), formatter);
-                double acumulado = alagamento.getPrecipitacaoChuva() != null ? alagamento.getPrecipitacaoChuva() : 0.0;                for (int horaAnterior = 1; horaAnterior <= 3; horaAnterior++) {
+                String dataHora = alagamento.getDataHora();
+                if (dataHora != null && dataHora.length() == 16) {
+                    dataHora += ":00";
+                }
+                assert dataHora != null;
+                LocalDateTime dataHoraOriginal;
+                try {
+                    dataHoraOriginal = LocalDateTime.parse(dataHora, formatter1);
+                } catch (DateTimeParseException e) {
+                    dataHoraOriginal = LocalDateTime.parse(dataHora, formatter2);
+                }
+                double acumulado = alagamento.getPrecipitacaoChuva() != null ? alagamento.getPrecipitacaoChuva() : 0.0;
+                for (int horaAnterior = 1; horaAnterior <= 3; horaAnterior++) {
                     long timestamp = dataHoraOriginal
                             .minusHours(horaAnterior)
                             .atZone(zonaBrasil)
                             .toEpochSecond();
 
-                    Alagamento climaAnterior = openWeatherOutputPort.buscarDadosClimaticosDataAlterada(alagamento, timestamp);
+                    Alagamento climaAnterior = openWeatherOutputPort.buscarDadosClimaticos(String.valueOf(alagamento.getLatitude()), String.valueOf(alagamento.getLongitude()), String.valueOf(timestamp));
                     if (climaAnterior != null && climaAnterior.getPrecipitacaoChuva() != null && climaAnterior.getPrecipitacaoChuva() > 0) {
                         acumulado += climaAnterior.getPrecipitacaoChuva();
                         alagamento.setTempoChuva(horaAnterior + 1);
                     }
                 }
-
                 alagamento.setPrecipitacaoAcumulada(acumulado);
             }
         }
