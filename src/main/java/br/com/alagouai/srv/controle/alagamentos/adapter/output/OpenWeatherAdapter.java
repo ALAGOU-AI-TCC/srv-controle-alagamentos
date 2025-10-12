@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
 
 @Slf4j
 @Component
@@ -27,12 +29,14 @@ public class OpenWeatherAdapter implements OpenWeatherOutputPort {
     @Value("${openweathermap.lang}") String lang;
 
 
-    public Alagamento buscarDadosClimaticosDataAlterada(Alagamento alagamento, Long dataHora) {
+    public Alagamento buscarDadosClimaticos(String latitude, String longitude, String dataHora) {
         try {
-            return alagamentoMapper.openWeatherToAlagamento(openWeatherClient.getWeatherData(alagamento.getLatitude(), alagamento.getLongitude(), dataHora, appId, units,lang).getData().getFirst());
+            log.info("Pesquisando dados climáticos no OpenWeather...");
+            return alagamentoMapper.openWeatherToAlagamento(openWeatherClient.getWeatherData(latitude, longitude, dataHora, appId, units,lang).getData().getFirst());
         } catch (Exception e) {
             log.error("Erro ao buscar dados climáticos", e);
             throw new IntegrationException(e.getMessage());
         }
     }
+
 }
