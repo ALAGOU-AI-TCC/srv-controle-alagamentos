@@ -2,8 +2,6 @@
 
 Microsserviço do **AlagouAI** que orquestra a coleta de **dados climáticos históricos (OpenWeather One Call – timemachine)** e chama a **Prediction API** do modelo de ML para estimar **risco de alagamento**. Expõe endpoints REST para previsão e para consulta de dados climáticos.
 
-> **Status:** pronto para revisão. Ajuste nomes de artefato se necessário (o `pom.xml` está com `artifactId: srv-controle-dadosClimaticos`).
-
 ---
 
 ## Sumário
