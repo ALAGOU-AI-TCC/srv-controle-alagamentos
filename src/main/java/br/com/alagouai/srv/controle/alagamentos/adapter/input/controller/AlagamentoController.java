@@ -6,6 +6,7 @@ import br.com.alagouai.srv.controle.alagamentos.adapter.mapper.PrevisaoMapper;
 import br.com.alagouai.srv.controle.alagamentos.core.domain.model.Previsao;
 import br.com.alagouai.srv.controle.alagamentos.port.input.AtualizarAlagamentoInputPort;
 import br.com.alagouai.srv.controle.alagamentos.port.input.PreverAlagamentoInputPort;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class AlagamentoController {
 
     @PostMapping("/predict")
     @ResponseStatus(HttpStatus.OK)
-    public PrevisaoResponse prever(@RequestBody PrevisaoRequest request) {
+    public PrevisaoResponse prever(@RequestBody @Valid PrevisaoRequest request) {
         log.info("Iniciando previsão de alagamento...");
         Previsao previsao = previsaoMapper.toDomain(request);
 

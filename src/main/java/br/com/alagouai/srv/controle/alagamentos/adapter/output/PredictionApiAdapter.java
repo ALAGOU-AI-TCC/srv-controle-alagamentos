@@ -1,6 +1,7 @@
 package br.com.alagouai.srv.controle.alagamentos.adapter.output;
 
 
+import br.com.alagouai.srv.controle.alagamentos.adapter.exception.IntegrationException;
 import br.com.alagouai.srv.controle.alagamentos.adapter.mapper.PrevisaoMapper;
 import br.com.alagouai.srv.controle.alagamentos.adapter.output.dto.PredictionApiResponse;
 import br.com.alagouai.srv.controle.alagamentos.adapter.output.feign.PredictionApiClient;
@@ -20,7 +21,13 @@ public class PredictionApiAdapter implements PredictionApiOutputPort {
     private final PrevisaoMapper previsaoMapper;
 
     public Previsao prever(DadosClimaticos dadosClimaticosAtual) {
-        PredictionApiResponse predict = predictionApiClient.predict(dadosClimaticosAtual);
-        return previsaoMapper.fromResponsetoDomain(predict);
+        try{
+            log.info("Acessando API para prever alagamento...");
+            PredictionApiResponse predict = predictionApiClient.predict(dadosClimaticosAtual);
+            return previsaoMapper.fromResponsetoDomain(predict);
+        } catch (Exception exception){
+            log.error("Erro ao acessar API para prever alagamento: {}", exception.getMessage(), exception);
+            throw new IntegrationException(exception.getMessage());
+        }
     }
 }
