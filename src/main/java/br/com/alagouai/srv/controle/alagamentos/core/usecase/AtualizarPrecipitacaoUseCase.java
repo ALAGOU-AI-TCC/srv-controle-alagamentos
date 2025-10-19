@@ -1,7 +1,7 @@
 package br.com.alagouai.srv.controle.alagamentos.core.usecase;
 
 
-import br.com.alagouai.srv.controle.alagamentos.core.domain.model.Alagamento;
+import br.com.alagouai.srv.controle.alagamentos.core.domain.model.DadosClimaticos;
 import br.com.alagouai.srv.controle.alagamentos.port.input.AtualizarAlagamentoInputPort;
 import br.com.alagouai.srv.controle.alagamentos.port.output.AlagamentosOutputPort;
 import br.com.alagouai.srv.controle.alagamentos.port.output.LogControlOutputPort;
@@ -31,22 +31,22 @@ public class AtualizarPrecipitacaoUseCase implements AtualizarAlagamentoInputPor
     public void atualizarPrecipitacaoAcumulada(Integer idControle, Integer limite) {
         log.logInfo("Iniciando processo de atualização da precipitacao acumulada e teempo de chuva para os registros a partir do Id {}", idControle);
 
-        List<Alagamento> alagamentosList =  alagamentosOutputPort.buscarRegostrosPorIdControle(idControle, limite);
+        List<DadosClimaticos> alagamentosList =  alagamentosOutputPort.buscarRegostrosPorIdControle(idControle, limite);
         var alagamentosListAtualizados = buscarRegistrosHorasAnteriores(alagamentosList);
         alagamentosOutputPort.atualizarRegistros(alagamentosListAtualizados);
     }
 
-    private List<Alagamento> buscarRegistrosHorasAnteriores(List<Alagamento> alagamentos) {
+    private List<DadosClimaticos> buscarRegistrosHorasAnteriores(List<DadosClimaticos> dadosClimaticos) {
         DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("MM/dd/yy HH:mm:ss");
 
 
         ZoneId zonaBrasil = ZoneId.of(TIMEZONE_SAO_PAULO);
 
-        for (Alagamento alagamento : alagamentos) {
-            if (alagamento.getPrecipitacaoAcumulada() == null || alagamento.getPrecipitacaoAcumulada() == 0.0) {
-                alagamento.setTempoChuva(0);
-                String dataHora = alagamento.getDataHora();
+        for (DadosClimaticos dadoClimatico : dadosClimaticos) {
+            if (dadoClimatico.getPrecipitacaoAcumulada() == null || dadoClimatico.getPrecipitacaoAcumulada() == 0.0) {
+                dadoClimatico.setTempoChuva(0);
+                String dataHora = dadoClimatico.getDataHora();
                 if (dataHora != null && dataHora.length() == 16) {
                     dataHora += ":00";
                 }
@@ -57,24 +57,24 @@ public class AtualizarPrecipitacaoUseCase implements AtualizarAlagamentoInputPor
                 } catch (DateTimeParseException e) {
                     dataHoraOriginal = LocalDateTime.parse(dataHora, formatter2);
                 }
-                double acumulado = alagamento.getPrecipitacaoChuva() != null ? alagamento.getPrecipitacaoChuva() : 0.0;
+                double acumulado = dadoClimatico.getPrecipitacaoChuva() != null ? dadoClimatico.getPrecipitacaoChuva() : 0.0;
                 for (int horaAnterior = 1; horaAnterior <= 3; horaAnterior++) {
                     long timestamp = dataHoraOriginal
                             .minusHours(horaAnterior)
                             .atZone(zonaBrasil)
                             .toEpochSecond();
 
-                    Alagamento climaAnterior = openWeatherOutputPort.buscarDadosClimaticos(String.valueOf(alagamento.getLatitude()), String.valueOf(alagamento.getLongitude()), String.valueOf(timestamp));
+                    DadosClimaticos climaAnterior = openWeatherOutputPort.buscarDadosClimaticos(String.valueOf(dadoClimatico.getLatitude()), String.valueOf(dadoClimatico.getLongitude()), String.valueOf(timestamp));
                     if (climaAnterior != null && climaAnterior.getPrecipitacaoChuva() != null && climaAnterior.getPrecipitacaoChuva() > 0) {
                         acumulado += climaAnterior.getPrecipitacaoChuva();
-                        alagamento.setTempoChuva(horaAnterior + 1);
+                        dadoClimatico.setTempoChuva(horaAnterior + 1);
                     }
                 }
-                alagamento.setPrecipitacaoAcumulada(acumulado);
+                dadoClimatico.setPrecipitacaoAcumulada(acumulado);
             }
         }
 
-        return alagamentos;
+        return dadosClimaticos;
     }
 
 }

@@ -1,9 +1,8 @@
 package br.com.alagouai.srv.controle.alagamentos.adapter.mapper;
 
-import br.com.alagouai.srv.controle.alagamentos.adapter.output.dto.OpenWeatherResponse;
 import br.com.alagouai.srv.controle.alagamentos.adapter.output.dto.WeatherData;
 import br.com.alagouai.srv.controle.alagamentos.adapter.output.repository.entity.AlagamentoEntity;
-import br.com.alagouai.srv.controle.alagamentos.core.domain.model.Alagamento;
+import br.com.alagouai.srv.controle.alagamentos.core.domain.model.DadosClimaticos;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -14,14 +13,13 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import static br.com.alagouai.srv.controle.alagamentos.core.common.constant.Constants.TIMEZONE_SAO_PAULO;
-import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface AlagamentoMapper {
 
-    Alagamento toAlagamento(AlagamentoEntity alagamentoEntity);
+    DadosClimaticos toAlagamento(AlagamentoEntity alagamentoEntity);
 
-    AlagamentoEntity toEntity(Alagamento alagamento);
+    AlagamentoEntity toEntity(DadosClimaticos dadosClimaticos);
 
 
         @Mapping(target = "temperatura", source = "temperatura")
@@ -41,7 +39,7 @@ public interface AlagamentoMapper {
         @Mapping(target = "precipitacaoDiaria", ignore = true)
         @Mapping(target = "precipitacaoAcumulada", ignore = true)
         @Mapping(target = "id", ignore = true)
-        Alagamento openWeatherToAlagamento(WeatherData weatherData);
+        DadosClimaticos openWeatherToAlagamento(WeatherData weatherData);
 
         @Named("timestampToString")
         static String timestampToString(long timestamp) {

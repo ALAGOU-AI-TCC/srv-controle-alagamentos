@@ -1,9 +1,8 @@
 package br.com.alagouai.srv.controle.alagamentos.core.usecase;
 
-import br.com.alagouai.srv.controle.alagamentos.core.domain.model.Alagamento;
+import br.com.alagouai.srv.controle.alagamentos.core.domain.model.DadosClimaticos;
 import br.com.alagouai.srv.controle.alagamentos.core.domain.model.Previsao;
 import br.com.alagouai.srv.controle.alagamentos.port.input.PreverAlagamentoInputPort;
-import br.com.alagouai.srv.controle.alagamentos.port.output.LogControlOutputPort;
 import br.com.alagouai.srv.controle.alagamentos.port.output.OpenWeatherOutputPort;
 import br.com.alagouai.srv.controle.alagamentos.port.output.PredictionApiOutputPort;
 
@@ -12,14 +11,11 @@ import static br.com.alagouai.srv.controle.alagamentos.utils.Utils.subtrairHoras
 
 public class PreverAlagamentoUseCase implements PreverAlagamentoInputPort {
 
-    private final LogControlOutputPort log;
     private final OpenWeatherOutputPort openWeatherOutputPort;
     private final PredictionApiOutputPort predictionApiOutputPort;
 
-    public PreverAlagamentoUseCase(LogControlOutputPort log,
-                                   OpenWeatherOutputPort openWeatherOutputPort,
+    public PreverAlagamentoUseCase(OpenWeatherOutputPort openWeatherOutputPort,
                                    PredictionApiOutputPort predictionApiOutputPort) {
-        this.log = log;
         this.openWeatherOutputPort = openWeatherOutputPort;
         this.predictionApiOutputPort = predictionApiOutputPort;
     }
@@ -28,82 +24,60 @@ public class PreverAlagamentoUseCase implements PreverAlagamentoInputPort {
     public Previsao prever(Previsao previsao) {
         final String tsAtual = formatadorDataUnix(previsao.getTime());
 
-        Alagamento alagamentoAtual = openWeatherOutputPort.buscarDadosClimaticos(previsao.getLatitude(), previsao.getLongitude(), tsAtual);
+        DadosClimaticos dadosClimaticosAtual =
+                openWeatherOutputPort.buscarDadosClimaticos(previsao.getLatitude(), previsao.getLongitude(), tsAtual);
 
-        double precipAcum4h = calcularPrecipitacaoAcumulada4h(
+        Acumulados4h acumulados = calcularAcumulados4h(
                 previsao.getLatitude(),
                 previsao.getLongitude(),
                 tsAtual,
-                alagamentoAtual
+                dadosClimaticosAtual
         );
 
-        int tempoChuva4h = calcularTempoChuvaAcumulado4h(
-                previsao.getLatitude(),
-                previsao.getLongitude(),
-                tsAtual,
-                alagamentoAtual
-        );
-
-        if (alagamentoAtual != null) {
-            alagamentoAtual.setPrecipitacaoAcumulada(precipAcum4h);
-            alagamentoAtual.setTempoChuva(tempoChuva4h);
+        if (dadosClimaticosAtual != null) {
+            dadosClimaticosAtual.setPrecipitacaoAcumulada(acumulados.precipitacaoAcumulada());
+            dadosClimaticosAtual.setTempoChuva(acumulados.tempoChuvaHoras());
         }
 
-        Previsao resposta = predictionApiOutputPort.prever(alagamentoAtual);
-
-        return resposta;
+        return predictionApiOutputPort.prever(dadosClimaticosAtual);
     }
 
-    private double calcularPrecipitacaoAcumulada4h(String latitude,
-                                                   String longitude,
-                                                   String tsReferenciaSegundos,
-                                                   Alagamento alagamentoAtual) {
-        double total = 0.0;
-        total += safeChuva(alagamentoAtual);
-
-        for (int h = 1; h <= 3; h++) {
-            String ts = subtrairHorasUnix(tsReferenciaSegundos, h);
-            Alagamento a = openWeatherOutputPort.buscarDadosClimaticos(latitude, longitude, ts);
-            total += safeChuva(a);
-        }
-
-        return Math.max(0.0, total);
-    }
-
-
-    private int calcularTempoChuvaAcumulado4h(String latitude,
+    private Acumulados4h calcularAcumulados4h(String latitude,
                                               String longitude,
                                               String tsReferenciaSegundos,
-                                              Alagamento alagamentoAtual) {
-        int totalHoras = 0;
+                                              DadosClimaticos dadosClimaticosAtual) {
+        double totalPrecip = 0.0;
+        int totalHorasChuva = 0;
 
-        totalHoras += choveuNestaHora(alagamentoAtual);
+        totalPrecip += safeChuva(dadosClimaticosAtual);
+        totalHorasChuva += choveuNestaHora(dadosClimaticosAtual);
 
         for (int h = 1; h <= 3; h++) {
             String ts = subtrairHorasUnix(tsReferenciaSegundos, h);
-            Alagamento a = openWeatherOutputPort.buscarDadosClimaticos(latitude, longitude, ts);
-            totalHoras += choveuNestaHora(a);
+            DadosClimaticos d = openWeatherOutputPort.buscarDadosClimaticos(latitude, longitude, ts);
+            totalPrecip += safeChuva(d);
+            totalHorasChuva += choveuNestaHora(d);
         }
 
-        if (totalHoras < 0) totalHoras = 0;
-        if (totalHoras > 4) totalHoras = 4;
+        totalPrecip = Math.max(0.0, totalPrecip);
+        totalHorasChuva = Math.max(0, Math.min(4, totalHorasChuva));
 
-        return totalHoras;
+        return new Acumulados4h(totalPrecip, totalHorasChuva);
     }
 
-    private int choveuNestaHora(Alagamento a) {
+    private record Acumulados4h(double precipitacaoAcumulada, int tempoChuvaHoras) {}
+
+    private int choveuNestaHora(DadosClimaticos a) {
         if (a == null) return 0;
 
         Integer t = a.getTempoChuva();
-        if (t != null) {
-            return (t > 0) ? 1 : 0;
-        }
+        if (t != null) return (t > 0) ? 1 : 0;
 
         double mm = safeChuva(a);
         return (mm > 0.0) ? 1 : 0;
     }
 
-    private double safeChuva(Alagamento a) {
+    private double safeChuva(DadosClimaticos a) {
         if (a == null) return 0.0;
         Double mm = a.getPrecipitacaoChuva();
         if (mm == null || Double.isNaN(mm) || Double.isInfinite(mm)) return 0.0;

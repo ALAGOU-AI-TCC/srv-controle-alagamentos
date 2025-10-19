@@ -42,4 +42,5 @@ public class AlagamentoController {
         log.info("Previsão de alagamento finalizada.");
         return previsaoMapper.toResponse(previsaoResponse);
     }
+
 }

@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.alagouai</groupId>
-	<artifactId>srv-controle-alagamentos</artifactId>
+	<artifactId>srv-controle-dadosClimaticos</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>srv-controle-alagamentos</name>
-	<description>Microsserviço disponibilizado para realizar diversas operações na tabela de alagamentos</description>
+	<name>srv-controle-dadosClimaticos</name>
+	<description>Microsserviço disponibilizado para realizar diversas operações na tabela de dadosClimaticos</description>
 	<url/>
 	<licenses>
 		<license/>

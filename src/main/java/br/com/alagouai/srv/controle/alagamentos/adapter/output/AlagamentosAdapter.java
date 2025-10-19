@@ -4,7 +4,7 @@ import br.com.alagouai.srv.controle.alagamentos.adapter.exception.DataBaseExcept
 import br.com.alagouai.srv.controle.alagamentos.adapter.mapper.AlagamentoMapper;
 import br.com.alagouai.srv.controle.alagamentos.adapter.output.repository.AlagamentosRepository;
 import br.com.alagouai.srv.controle.alagamentos.adapter.output.repository.entity.AlagamentoEntity;
-import br.com.alagouai.srv.controle.alagamentos.core.domain.model.Alagamento;
+import br.com.alagouai.srv.controle.alagamentos.core.domain.model.DadosClimaticos;
 import br.com.alagouai.srv.controle.alagamentos.port.output.AlagamentosOutputPort;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class AlagamentosAdapter implements AlagamentosOutputPort {
     }
 
     @Override
-    public List<Alagamento> buscarRegostrosPorIdControle(Integer idControle, Integer limite) {
+    public List<DadosClimaticos> buscarRegostrosPorIdControle(Integer idControle, Integer limite) {
         int idFim = idControle + limite;
         log.info("Iniciando consultas do Id {}, até {}", idControle, idFim);
         try {
@@ -42,7 +42,7 @@ public class AlagamentosAdapter implements AlagamentosOutputPort {
 
     @Transactional
     @Override
-    public void atualizarRegistros(List<Alagamento> alagamentosListAtualizados) {
+    public void atualizarRegistros(List<DadosClimaticos> alagamentosListAtualizados) {
         try {
             List<AlagamentoEntity> entidades = alagamentosListAtualizados.stream()
                     .map(alagamentoMapper::toEntity)

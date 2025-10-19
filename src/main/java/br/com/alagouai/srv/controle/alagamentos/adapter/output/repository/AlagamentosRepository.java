@@ -1,7 +1,6 @@
 package br.com.alagouai.srv.controle.alagamentos.adapter.output.repository;
 
 import br.com.alagouai.srv.controle.alagamentos.adapter.output.repository.entity.AlagamentoEntity;
-import br.com.alagouai.srv.controle.alagamentos.core.domain.model.Alagamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

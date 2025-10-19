@@ -1,2 +1,2 @@
-# srv-controle-alagamentos
-Microsserviço disponibilizado para realizar diversas operações na tabela de alagamentos
+# srv-controle-dadosClimaticos
+Microsserviço disponibilizado para realizar diversas operações na tabela de dadosClimaticos
