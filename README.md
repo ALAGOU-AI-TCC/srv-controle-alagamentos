@@ -18,7 +18,7 @@ Arquitetura **hexagonal (Ports & Adapters)**. O caso de uso central (`PreverAlag
 ---
 
 ## Configuração
-> **Recomendação:** manter **apenas a chave do OpenWeather como variável de ambiente**. As configurações de MySQL e rotas internas ficam no `application.yaml` (fora do versionamento de segredos).
+> **Recomendação:** manter **apenas a chave do OpenWeather como variável de ambiente**. As configurações de MySQL e rotas internas ficam no `application.yaml` 
 
 
 ### `application.yaml` (exemplo)
