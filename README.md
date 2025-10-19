@@ -108,15 +108,11 @@ Retorna a probabilidade/nível de risco para um ponto geográfico e instante no 
 }
 ```
 
-**Observações**
-- Idempotente (mesmo input → mesmo output, salvo atualização de dados externos).
-- Recomendável cacheamento curto por `(lat,lon,time)` no nível do BFF/API Gateway, se existir.
 
 ---
 
 ### 2) `GET /dadosclimaticos` — Clima bruto (debug)
-Retorna o payload climático bruto utilizado como entrada para o modelo. Útil para troubleshooting e validação.
-
+Retorna o payload climático bruto utilizado como entrada para o modelo.
 **Query params**
 - `latitude` (obrigatório)
 - `longitude` (obrigatório)
