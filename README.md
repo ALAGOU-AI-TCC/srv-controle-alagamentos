@@ -59,7 +59,7 @@ predictionapi:
 ## Endpoints (detalhados)
 
 ### 1) `POST /predict` — Previsão de risco de alagamento
-Retorna a probabilidade/nível de risco para um ponto geográfico e instante no tempo.
+Retorna a probabilidade/nível de risco de alagamento para um ponto geográfico e instante no tempo.
 
 **Request body (`application/json`)**
 ```json
