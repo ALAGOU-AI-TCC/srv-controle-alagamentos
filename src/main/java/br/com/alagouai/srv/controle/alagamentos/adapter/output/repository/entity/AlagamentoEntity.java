@@ -3,7 +3,6 @@ package br.com.alagouai.srv.controle.alagamentos.adapter.output.repository.entit
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 

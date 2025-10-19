@@ -4,17 +4,12 @@ package br.com.alagouai.srv.controle.alagamentos.adapter.output;
 import br.com.alagouai.srv.controle.alagamentos.adapter.exception.IntegrationException;
 import br.com.alagouai.srv.controle.alagamentos.adapter.mapper.AlagamentoMapper;
 import br.com.alagouai.srv.controle.alagamentos.adapter.output.feign.OpenWeatherClient;
-import br.com.alagouai.srv.controle.alagamentos.core.domain.model.Alagamento;
+import br.com.alagouai.srv.controle.alagamentos.core.domain.model.DadosClimaticos;
 import br.com.alagouai.srv.controle.alagamentos.port.output.OpenWeatherOutputPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
 
 @Slf4j
 @Component
@@ -29,7 +24,7 @@ public class OpenWeatherAdapter implements OpenWeatherOutputPort {
     @Value("${openweathermap.lang}") String lang;
 
 
-    public Alagamento buscarDadosClimaticos(String latitude, String longitude, String dataHora) {
+    public DadosClimaticos buscarDadosClimaticos(String latitude, String longitude, String dataHora) {
         try {
             log.info("Pesquisando dados climáticos no OpenWeather...");
             return alagamentoMapper.openWeatherToAlagamento(openWeatherClient.getWeatherData(latitude, longitude, dataHora, appId, units,lang).getData().getFirst());

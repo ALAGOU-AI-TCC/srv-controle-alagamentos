@@ -1,8 +1,10 @@
 package br.com.alagouai.srv.controle.alagamentos.config;
 
 import br.com.alagouai.srv.controle.alagamentos.core.usecase.AtualizarPrecipitacaoUseCase;
+import br.com.alagouai.srv.controle.alagamentos.core.usecase.ObterDadosClimaticosUseCase;
 import br.com.alagouai.srv.controle.alagamentos.core.usecase.PreverAlagamentoUseCase;
 import br.com.alagouai.srv.controle.alagamentos.port.input.AtualizarAlagamentoInputPort;
+import br.com.alagouai.srv.controle.alagamentos.port.input.ObterDadosClimaticosInputPort;
 import br.com.alagouai.srv.controle.alagamentos.port.input.PreverAlagamentoInputPort;
 import br.com.alagouai.srv.controle.alagamentos.port.output.AlagamentosOutputPort;
 import br.com.alagouai.srv.controle.alagamentos.port.output.LogControlOutputPort;
@@ -20,7 +22,12 @@ public class BeanConfig {
     }
 
     @Bean
-    public PreverAlagamentoInputPort preverAlagamentoInputPort(LogControlOutputPort logControlOutputPort, OpenWeatherOutputPort openWeatherOutputPort, PredictionApiOutputPort predictionApiOutputPort) {
-        return new PreverAlagamentoUseCase(logControlOutputPort, openWeatherOutputPort, predictionApiOutputPort);
+    public PreverAlagamentoInputPort preverAlagamentoInputPort(OpenWeatherOutputPort openWeatherOutputPort, PredictionApiOutputPort predictionApiOutputPort) {
+        return new PreverAlagamentoUseCase(openWeatherOutputPort, predictionApiOutputPort);
+    }
+
+    @Bean
+    public ObterDadosClimaticosInputPort obterDadosClimaticosInputPort(OpenWeatherOutputPort openWeatherOutputPort) {
+        return new ObterDadosClimaticosUseCase(openWeatherOutputPort);
     }
 }

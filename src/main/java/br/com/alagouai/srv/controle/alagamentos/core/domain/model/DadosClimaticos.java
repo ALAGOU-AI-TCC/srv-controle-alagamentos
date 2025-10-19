@@ -1,6 +1,6 @@
 package br.com.alagouai.srv.controle.alagamentos.core.domain.model;
 
-public class Alagamento {
+public class DadosClimaticos {
 
         private Long id;
         private Double temperatura;
@@ -20,9 +20,9 @@ public class Alagamento {
         private Double precipitacaoDiaria;
         private Double precipitacaoAcumulada;
 
-    public Alagamento() {
+    public DadosClimaticos() {
     }
-    public Alagamento(Long id, Double temperatura, Integer umidade, Integer pressao, Double velocidadeVento, Double precipitacaoChuva, Integer tempoChuva, String intensidadeChuva, Double pontoOrvalho, Double latitude, Double longitude, String dataHora, Integer historicoAlagamento, String solo, String bairro, Double precipitacaoDiaria, Double precipitacaoAcumulada) {
+    public DadosClimaticos(Long id, Double temperatura, Integer umidade, Integer pressao, Double velocidadeVento, Double precipitacaoChuva, Integer tempoChuva, String intensidadeChuva, Double pontoOrvalho, Double latitude, Double longitude, String dataHora, Integer historicoAlagamento, String solo, String bairro, Double precipitacaoDiaria, Double precipitacaoAcumulada) {
         this.id = id;
         this.temperatura = temperatura;
         this.umidade = umidade;
@@ -180,7 +180,7 @@ public class Alagamento {
 
     @Override
         public String toString() {
-            return "Alagamento{" +
+            return "DadosClimaticos{" +
                     "temperatura=" + temperatura +
                     ", umidade=" + umidade +
                     ", pressao=" + pressao +
