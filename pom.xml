@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.alagouai</groupId>
-	<artifactId>srv-controle-dadosClimaticos</artifactId>
+	<artifactId>srv-controle-alagamentos</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>srv-controle-dadosClimaticos</name>
 	<description>Microsserviço disponibilizado para realizar diversas operações na tabela de dadosClimaticos</description>

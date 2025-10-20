@@ -10,10 +10,8 @@ spring:
     banner-mode: "OFF"
   banner:
     location: banner.txt
-#  profiles:
-#    active: ${ENVIRONMENT:@spring.profiles.active@}
 
-
+  # valores padrão para rodar FORA de container (dev local)
   datasource:
     url: jdbc:mysql://localhost:3306/alagamentos?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
@@ -22,7 +20,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update  # ou validate, none, create, create-drop, conforme o ambiente
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -34,7 +32,25 @@ openweathermap:
   lang: pt_br
   units: metric
 
-
 predictionapi:
   url: http://localhost:8000
   path-predict: /predict
+
+# ... seu conteúdo atual (mantém dev local em localhost) ...
+
+---
+spring:
+  config:
+    activate:
+      on-profile: container
+  datasource:
+    url: jdbc:mysql://mysql:3306/alagamento?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: alagouai
+    password: alagouai_pwd
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+predictionapi:
+  url: ${PY_SERVICE_URL:http://api-py:8000}
+
