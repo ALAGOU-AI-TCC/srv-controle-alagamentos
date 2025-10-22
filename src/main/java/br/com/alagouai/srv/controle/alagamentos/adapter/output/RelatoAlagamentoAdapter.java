@@ -60,13 +60,20 @@ public class RelatoAlagamentoAdapter implements RelatoAlagamentoOutputPort {
 
     @Override
     public ContagemPerto contarPerto(double latitude, double longitude, int raioMetros, int desdeMinutos) {
-        Object[] row = jpa.contarNaArea(latitude, longitude, raioMetros, desdeMinutos);
-        long total = row != null ? ((Number) row[0]).longValue() : 0L;
-        long pessoas = row != null ? ((Number) row[1]).longValue() : 0L;
-        Timestamp ultimo = row != null ? (Timestamp) row[2] : null;
-        Instant ultimoInstante = ultimo != null ? ultimo.toInstant() : null;
+        List<Object[]> rows = jpa.contarNaArea(latitude, longitude, raioMetros, desdeMinutos);
+        if (rows == null || rows.isEmpty()) {
+            return new ContagemPerto(0L, 0L, null);
+        }
+        Object[] r = rows.get(0);
 
-        Long pessoasDistintas = (pessoas == 0 && total > 0) ? null : pessoas;
-        return new ContagemPerto(total, pessoasDistintas, ultimoInstante);
+        long total = (r[0] == null) ? 0L : ((Number) r[0]).longValue();
+        long pessoasRaw = (r[1] == null) ? 0L : ((Number) r[1]).longValue();
+
+        Timestamp ts = (Timestamp) r[2];
+        Instant ultimo = (ts == null) ? null : ts.toInstant();
+
+        Long pessoasDistintas = (pessoasRaw == 0 && total > 0) ? null : pessoasRaw;
+
+        return new ContagemPerto(total, pessoasDistintas, ultimo);
     }
 }
