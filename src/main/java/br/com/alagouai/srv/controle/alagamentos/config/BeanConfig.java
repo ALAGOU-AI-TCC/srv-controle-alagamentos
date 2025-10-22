@@ -1,15 +1,9 @@
 package br.com.alagouai.srv.controle.alagamentos.config;
 
-import br.com.alagouai.srv.controle.alagamentos.core.usecase.AtualizarPrecipitacaoUseCase;
-import br.com.alagouai.srv.controle.alagamentos.core.usecase.ObterDadosClimaticosUseCase;
-import br.com.alagouai.srv.controle.alagamentos.core.usecase.PreverAlagamentoUseCase;
-import br.com.alagouai.srv.controle.alagamentos.port.input.AtualizarAlagamentoInputPort;
-import br.com.alagouai.srv.controle.alagamentos.port.input.ObterDadosClimaticosInputPort;
-import br.com.alagouai.srv.controle.alagamentos.port.input.PreverAlagamentoInputPort;
-import br.com.alagouai.srv.controle.alagamentos.port.output.AlagamentosOutputPort;
-import br.com.alagouai.srv.controle.alagamentos.port.output.LogControlOutputPort;
-import br.com.alagouai.srv.controle.alagamentos.port.output.OpenWeatherOutputPort;
-import br.com.alagouai.srv.controle.alagamentos.port.output.PredictionApiOutputPort;
+import br.com.alagouai.srv.controle.alagamentos.adapter.output.repository.RelatoAlagamentoRepository;
+import br.com.alagouai.srv.controle.alagamentos.core.usecase.*;
+import br.com.alagouai.srv.controle.alagamentos.port.input.*;
+import br.com.alagouai.srv.controle.alagamentos.port.output.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,5 +23,20 @@ public class BeanConfig {
     @Bean
     public ObterDadosClimaticosInputPort obterDadosClimaticosInputPort(OpenWeatherOutputPort openWeatherOutputPort) {
         return new ObterDadosClimaticosUseCase(openWeatherOutputPort);
+    }
+
+    @Bean
+    RegistrarRelatoInputPort registrarRelatoUseCase(RelatoAlagamentoOutputPort repo) {
+        return new RegistrarRelatoUseCase(repo);
+    }
+
+    @Bean
+    EncontrarPertoInputPort encontrarPertoUseCase(RelatoAlagamentoOutputPort repo) {
+        return new EncontrarPertoUseCase(repo);
+    }
+
+    @Bean
+    ContarPertoInputPort contarPertoUseCase(RelatoAlagamentoOutputPort repo) {
+        return new ContarPertoUseCase(repo);
     }
 }

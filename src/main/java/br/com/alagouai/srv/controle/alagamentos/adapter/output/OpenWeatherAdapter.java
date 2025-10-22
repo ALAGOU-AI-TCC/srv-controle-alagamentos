@@ -27,7 +27,7 @@ public class OpenWeatherAdapter implements OpenWeatherOutputPort {
     public DadosClimaticos buscarDadosClimaticos(String latitude, String longitude, String dataHora) {
         try {
             log.info("Pesquisando dados climáticos no OpenWeather...");
-            return alagamentoMapper.openWeatherToAlagamento(openWeatherClient.getWeatherData(latitude, longitude, dataHora, appId, units,lang).getData().getFirst());
+            return alagamentoMapper.openWeatherToAlagamento(openWeatherClient.getWeatherData(latitude, longitude, dataHora, appId, units,lang).getData().get(0));
         } catch (Exception e) {
             log.error("Erro ao buscar dados climáticos", e);
             throw new IntegrationException(e.getMessage());
