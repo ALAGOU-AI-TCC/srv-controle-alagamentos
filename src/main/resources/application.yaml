@@ -35,7 +35,7 @@ spring:
 
 openweathermap:
   url: https://api.openweathermap.org
-  key: 83fc18e7ebac62bf38dfdf42efb213b1
+  key: chaveteste
   lang: pt_br
   units: metric
 
