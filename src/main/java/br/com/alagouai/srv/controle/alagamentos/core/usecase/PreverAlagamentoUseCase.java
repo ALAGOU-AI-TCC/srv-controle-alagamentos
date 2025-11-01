@@ -26,7 +26,8 @@ public class PreverAlagamentoUseCase implements PreverAlagamentoInputPort {
 
         DadosClimaticos dadosClimaticosAtual =
                 openWeatherOutputPort.buscarDadosClimaticos(previsao.getLatitude(), previsao.getLongitude(), tsAtual);
-
+        dadosClimaticosAtual.setLatitude(Double.valueOf(previsao.getLatitude()));
+        dadosClimaticosAtual.setLongitude(Double.valueOf(previsao.getLongitude()));
         Acumulados4h acumulados = calcularAcumulados4h(
                 previsao.getLatitude(),
                 previsao.getLongitude(),
